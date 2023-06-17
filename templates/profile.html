@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+</head>
+<body>
+    <h1>Profile</h1>
+    {% block content %}
+    <p>Welcome, {{ current_user.email }}!</p>
+    <p>Other profile information can go here.</p>
+    {% endblock %}
+</body>
+</html>

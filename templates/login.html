@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    {% block content %}
+    <form method="POST" action="{{ url_for('user.login') }}">
+        {{ user_login_form.hidden_tag() }}
+        {{ user_login_form.email.label }} {{ user_login_form.email }}
+        {{ user_login_form.password.label }} {{ user_login_form.password }}
+        {{ user_login_form.remember_me.label }} {{ user_login_form.remember_me }}
+        {{ user_login_form.submit }}
+    </form>
+    {% endblock %}
+</body>
+</html>

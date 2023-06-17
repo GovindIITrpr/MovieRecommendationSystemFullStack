@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Movie Recommender System</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}?v={{ timestamp }}">
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Typeahead JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="text-center mt-4">Movie Recommender System</h1>
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Search Movie</h5>
+            <form method="POST" action="/search">
+              <div class="form-group">
+                <input type="text" name="movie_name" class="form-control typeahead" placeholder="Enter a movie name" required autocomplete="on">
+              </div>
+              <button type="submit" class="btn btn-primary">Recommend</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Display Searched Movie Details -->
+    {% if movie_id %}
+    <div class="row mt-4">
+      <div class="col-md-3">
+        <div class="card small-poster">
+          <img src="{{ poster }}" class="card-img-top " alt="Movie Poster">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card small-poster">
+          <div class="card-body">
+            <h5 class="card-title">Searched Movie Details</h5>
+            <p class="card-text">Movie ID: {{ movie_id }}</p>
+            <p class="card-text">Overview: {{ overview }}</p>
+            <p class="card-text">Cast: {{ cast|join(', ') }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Display Recommended Movies -->
+    {% if recommended_movie_names %}
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Recommended Movies</h5>
+            <div class="row">
+              {% for i in range(recommended_movie_names|length) %}
+              {% set name = recommended_movie_names[i] %}
+              {% set poster = recommended_movie_posters[i] %}
+              <div class="col-md-4 mb-4 recommended-movie-card" data-movie-name="{{ name }}">
+                <div class="card small-poster">
+                  <img src="{{ poster }}" class="card-img-top" alt="Movie Poster">
+                  <div class="card-body">
+                    <h6 class="card-title">{{ name }}</h6>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    $(document).ready(function() {
+      // Fetch movie names for typeahead
+      var movieNames = [
+        {% for movie in movie_names %}
+        "{{ movie }}",
+        {% endfor %}
+      ];
+  
+      // Initialize Typeahead on the input field
+      $('.typeahead').typeahead({
+        source: movieNames
+      });
+  
+      // Handle click event on recommended movie cards
+      $('.recommended-movie-card').on('click', function() {
+        var movieName = $(this).data('movie-name');
+        var form = $('<form method="POST" action="/search"></form>');
+        var input = $('<input type="hidden" name="movie_name">');
+        input.val(movieName);
+        form.append(input);
+        form.appendTo('body').submit();
+      });
+    });
+  </script>
+  
+  </script>
+</body>
+
+</html>

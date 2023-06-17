@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <h1>Register</h1>
+    {% block content %}
+    <form method="POST" action="{{ url_for('user.register') }}">
+        {{ user_register_form.hidden_tag() }}
+        {{ user_register_form.email.label }} {{ user_register_form.email }}
+        {{ user_register_form.password.label }} {{ user_register_form.password }}
+        {{ user_register_form.retype_password.label }} {{ user_register_form.retype_password }}
+        {{ user_register_form.submit }}
+    </form>
+    {% endblock %}
+</body>
+</html>
